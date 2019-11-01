@@ -28,7 +28,7 @@ if(process.env.NODE_ENV !== 'production') app.use(cors())
 app.use('/api', require('./routes/api'))
 app.use(history())
 
-app.use(express.static(path.join(__dirname, '../','config','ssl')))
+app.use(express.static(path.join(__dirname, '../','config','ssl'), { dotfiles: 'allow' }))
 app.use(express.static(path.join(__dirname, '../','fe','dist')))
 
 // catch 404 and forward to error handler
