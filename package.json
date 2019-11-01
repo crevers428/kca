@@ -1,0 +1,15 @@
+{
+  "name": "kca",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "NODE_ENV=development node ./be/bin/www",
+    "serve": "cd fe && yarn serve",
+    "serve2": "cd comp && yarn serve",
+    "pr": "cd fe && yarn && yarn build && cd ../ && yarn && NODE_ENV=production PORT=80 node ./be/bin/www",
+    "pm2": "cd fe && yarn && yarn build && cd ../be && yarn && cd ../ && pm2 start --env pr"
+  },
+  "dependencies": {
+    "webpack-bundle-analyzer": "^3.5.1"
+  }
+}
