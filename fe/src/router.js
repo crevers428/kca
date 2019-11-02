@@ -14,8 +14,6 @@ import CompResult from './views/comp/Result.vue'
 import CompNew from './views/comp/New.vue'
 import CompDashboard from './views/comp/Dashboard.vue'
 
-import Note from './views/Note.vue'
-
 Vue.use(Router)
 
 // set prototype for http
@@ -72,11 +70,6 @@ export default new Router({
         path: '/',
         name: 'home',
         component: Home
-    },
-    {
-      path: '/note',
-      name: 'note',
-      component: Note
     },
     {
         path: '/signin',

@@ -16,7 +16,7 @@
         </v-row>
         <v-row>
             <div style="font-size: 0.8rem; color:#555555;" class="mb-2">날짜</div>
-            <date-picker
+            <!-- <date-picker
                 is-inline
                 is-expanded
                 locale="ko"
@@ -25,7 +25,7 @@
                 v-model="form.date"
                 ref="datepicker"
             >
-            </date-picker>
+            </date-picker> -->
         </v-row>
         <v-row>
             <div
@@ -41,7 +41,7 @@
 </template>
 <script>
 // DATE Picker
-import DatePicker from 'v-calendar/lib/components/date-picker.umd'
+//import DatePicker from 'v-calendar/lib/components/date-picker.umd'
 
 import EventPicker from './eventPicker.vue'
 
@@ -49,7 +49,8 @@ import rules from '../../validations/competition.js'
 
 export default {
     components: {
-        DatePicker, EventPicker
+        //DatePicker,
+        EventPicker
     },
     props: {
         comp: { type: Object }

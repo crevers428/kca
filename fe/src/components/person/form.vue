@@ -32,7 +32,7 @@
         </v-row>
         <v-row>
             <div style="font-size: 0.8rem; color:#555555;" class="mb-2">생년월일</div>
-            <date-picker
+            <!-- <date-picker
                 is-inline
                 is-expanded
                 locale="ko"
@@ -41,7 +41,7 @@
                 ref="datepicker"
                 @input="dateChange"
             >
-            </date-picker>
+            </date-picker> -->
         </v-row>
         <v-row>
             <div
@@ -60,12 +60,13 @@
 </template>
 <script>
 // Picker
-import DatePicker from 'v-calendar/lib/components/date-picker.umd'
+// import DatePicker from 'v-calendar/lib/components/date-picker.umd'
 import EventPicker from '../comp/eventPicker.vue'
 
 export default {
     components: {
-        DatePicker, EventPicker
+        // DatePicker,
+        EventPicker
     },
     props: {
         person: { type: Object },
