@@ -36,14 +36,14 @@ export default {
     data: () => ({
         height: window.innerHeight,
         carouselItems: [
-            {
-                src: "http://www.koreacubesociety.co.kr/thum_img/koreacub/banner/cb9b5b34b1fede28274bced6588cc13b_water__c3_w1000_h400.png",
-                title: "title1"
-            },
-            {
-                src: "http://www.koreacubesociety.co.kr/thum_img/koreacub/banner/1bbf26f83bfa643e7c027ccebe3a4930_water__c3_w1000_h400.png",
-                title: "title2"
-            }
+            // {
+            //     src: "http://www.koreacubesociety.co.kr/thum_img/koreacub/banner/cb9b5b34b1fede28274bced6588cc13b_water__c3_w1000_h400.png",
+            //     title: "title1"
+            // },
+            // {
+            //     src: "http://www.koreacubesociety.co.kr/thum_img/koreacub/banner/1bbf26f83bfa643e7c027ccebe3a4930_water__c3_w1000_h400.png",
+            //     title: "title2"
+            // }
         ]
     }),
     methods: {

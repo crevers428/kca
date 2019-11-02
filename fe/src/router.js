@@ -6,9 +6,6 @@ import Home from './views/Home.vue'
 import Signin from './views/sign/In.vue'
 import Signup from './views/sign/Up.vue'
 
-import User from './views/user/Index.vue'
-import Page from './views/Page.vue'
-
 import Ranking from './views/Ranking.vue'
 
 import CompIndex from './views/comp/Index.vue'
@@ -16,10 +13,6 @@ import CompResults from './views/comp/Results.vue'
 import CompResult from './views/comp/Result.vue'
 import CompNew from './views/comp/New.vue'
 import CompDashboard from './views/comp/Dashboard.vue'
-import CompRegs from './views/comp/Regs.vue'
-import CompRounds from './views/comp/Rounds.vue'
-import CompRound from './views/comp/Round.vue'
-import CompSettings from './views/comp/Settings.vue'
 
 import Note from './views/Note.vue'
 
@@ -141,38 +134,38 @@ export default new Router({
     {
         path: '/comp/:id/regs',
         name: 'compRegs',
-        component: CompRegs,
+        component: () => import('./views/comp/Regs.vue'),
         beforeEnter: pageCheck
     },
     {
         path: '/comp/:id/rounds',
         name: 'compRounds',
-        component: CompRounds,
+        component: () => import('./views/comp/Rounds.vue'),
         beforeEnter: pageCheck
     },
     {
         path: '/comp/:id/rounds/:ev',
         name: 'compRound',
-        component: CompRound,
+        component: () => import('./views/comp/Round.vue'),
         beforeEnter: pageCheck
     },
     {
         path: '/comp/:id/settings',
         name: 'compSettings',
-        component: CompSettings,
+        component: () => import('./views/comp/Settings.vue'),
         beforeEnter: pageCheck
     },
 
     {
         path: '/user',
         name: 'user',
-        component: User,
+        component: () => import('./views/user/Index.vue'),
         beforeEnter: pageCheck
     },
     {
         path: '/page',
         name: 'page',
-        component: Page,
+        component: () => import('./views/Page.vue'),
         beforeEnter: pageCheck
     },
     {
