@@ -91,13 +91,14 @@ function onListening() {
 
 // ssl
 const fs = require('fs')
-if (fs.existsSync('./config/keys/site.key') && fs.existsSync('./config/keys/cert.crt') && fs.existsSync('./config/keys/ca.crt')) {
+const config = require('../../config/index.js')
+if (fs.existsSync('/etc/letsencrypt/live/' + config.domain + '/privkey.pem') && fs.existsSync('/etc/letsencrypt/live/' + config.domain + '/cert.pem') && fs.existsSync('/etc/letsencrypt/live/' + config.domain + '/chain.pem')) {
   const https = require('https')
   const httpsPort = process.env.PORT ? 443 : 3001
   const o = {
-    key: fs.readFileSync('./config/keys/site.key'),
-    cert: fs.readFileSync('./config/keys/cert.crt'),
-    ca: [fs.readFileSync('./config/keys/ca.crt')]
+    key: fs.readFileSync('/etc/letsencrypt/live/' + config.domain + '/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/' + config.domain + '/cert.pem'),
+    ca: [fs.readFileSync('/etc/letsencrypt/live/' + config.domain + '/chain.pem')]
   }
   const serverSSL = https.createServer(o, app).listen(httpsPort)
 

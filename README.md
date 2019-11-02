@@ -43,7 +43,9 @@ ${} 를 수정하세요.
 
             expiresInDiv: 3, // to calculate expired time
 
-        }
+        },
+
+        domain: 'domain.d'
 
     }
 
