@@ -7,6 +7,7 @@ const cors = require('cors');
 const history = require('connect-history-api-fallback')
 const cfg = require('../config')
 const jwt = require('jsonwebtoken')
+const fs = require('fs')
 
 var app = express();
 
@@ -26,9 +27,10 @@ mongoose.connect(cfg.dbUrl, {useNewUrlParser: true, useUnifiedTopology: true }, 
 if(process.env.NODE_ENV !== 'production') app.use(cors())
 
 app.use('/api', require('./routes/api'))
-app.use(history())
 
 app.use(express.static(path.join(__dirname, '../','config','ssl'), { dotfiles: 'allow' }))
+
+app.use(history())
 app.use(express.static(path.join(__dirname, '../','fe','dist')))
 
 // catch 404 and forward to error handler
