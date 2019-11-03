@@ -10,6 +10,7 @@
     "pm2": "cd fe && yarn && yarn build && cd ../be && yarn && cd ../ && pm2 start --env pr"
   },
   "dependencies": {
+    "express-https-redirect": "^1.0.0",
     "mongoose": "^5.7.7",
     "webpack-bundle-analyzer": "^3.5.1"
   }

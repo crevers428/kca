@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+const httpsRedirect = require('express-https-redirect')
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -11,16 +12,7 @@ const fs = require('fs')
 
 var app = express();
 
-app.use(function(req, res, next) {
-    if (fs.existsSync('/etc/letsencrypt/live/' + cfg.domain + '/privkey.pem') && fs.existsSync('/etc/letsencrypt/live/' + cfg.domain + '/cert.pem') && fs.existsSync('/etc/letsencrypt/live/' + cfg.domain + '/chain.pem')) {
-        if(!req.secure) {
-            res.redirect('https://' + cfg.domain + req.url)
-        } else {
-            next ()
-        }
-    }
-    next()
-})
+app.use('/', httpsRedirect())
 
 app.use(logger('dev'));
 app.use(express.json());
