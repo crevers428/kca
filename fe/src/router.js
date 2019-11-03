@@ -7,6 +7,8 @@ import Signin from './views/sign/In.vue'
 import Signup from './views/sign/Up.vue'
 
 import Ranking from './views/Ranking.vue'
+import People from './views/People.vue'
+import Person from './views/Person.vue'
 
 import CompIndex from './views/comp/Index.vue'
 import CompResults from './views/comp/Results.vue'
@@ -86,6 +88,17 @@ export default new Router({
         path: '/ranking',
         name: 'ranking',
         component: Ranking
+    },
+
+    {
+        path: '/person',
+        name: 'people',
+        component: People
+    },
+    {
+        path: '/person/:id',
+        name: 'person',
+        component: Person
     },
 
     {

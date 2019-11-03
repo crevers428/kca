@@ -17,15 +17,17 @@ const recordSchema = new mongoose.Schema({
     },
     date: { type: Date }, // if undefined, the last time of the round or comp date
     type: { type: String, default: 'a', enum: ['a', 'm', '3', '2', '1'] },
-    round: { type: String, default: 1, enum: [1, 2, 3, 4, 'f'] },
+    round: { type: Number, default: 1, enum: [1, 2, 3, 4] },
+    isFinal: { type: Boolean },
+    place: { type: Number },
     detail: [{ type: Number, default: 0 }],
     best: { type: Number, default: 0 },
     mean: { type: Number },
     worst: { type: Number, default: 0 },
-    nrSingle: { type: String, default: '0' },
-    nrMean: { type: String, default: '0'},
-    pbSingle: { type: String, default: '0' },
-    pbMean: { type: String, default: '0' }
+    nrSingle: { type: Boolean, default: false },
+    nrMean: { type: Boolean, default: false },
+    pbSingle: { type: Boolean, default: false },
+    pbMean: { type: Boolean, default: false }
 })
 
 module.exports = mongoose.model('Record', recordSchema)

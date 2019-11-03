@@ -138,8 +138,10 @@
 }
 </style>
 <script>
+import { pop } from '../mixins/global/pop.js'
 import ofcEvents from '../forms/events.js'
 export default {
+    mixins: [pop],
     data: function () {
         return {
             ready: false,

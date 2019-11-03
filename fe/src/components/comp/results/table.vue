@@ -20,11 +20,27 @@
             </thead>
             <tbody v-if="records.length > 0">
                 <tr v-for="(record, i) in records" :key="record._id">
-                    <td class="text-right">{{i + 1}}</td>
+                    <td class="text-right">{{ (i > 0 && records[i - 1].place == record.place) ? '' : record.place }}</td>
                     <td style="white-space: nowrap;">{{record.personName}}</td>
                     <td></td>
-                    <td class="text-right" style="font-size: 0.8rem;">{{timeReg(record.best)}}</td>
-                    <td class="text-right" style="font-size: 0.8rem;">{{timeReg(record.mean)}}</td>
+                    <td class="text-right" style="font-size: 0.8rem; position: relative;">
+                        <span
+                            v-if="record.nrSingle"
+                            style="position: absolute; top: 1px; right: 1px; font-size: 0.6rem; color: #E64A19;"
+                        >
+                            NR
+                        </span>
+                        {{timeReg(record.best)}}
+                    </td>
+                    <td class="text-right" style="font-size: 0.8rem; position: relative;">
+                        <span
+                            v-if="record.nrMean"
+                            style="position: absolute; top: 1px; right: 1px; font-size: 0.6rem; color: #E64A19;"
+                        >
+                            NR
+                        </span>
+                        {{timeReg(record.mean)}}
+                    </td>
                     <td></td>
                     <td class="text-right" style="font-size: 0.8rem;">{{timeReg(record.detail[0])}}</td>
                     <td class="text-right" style="font-size: 0.8rem;">{{timeReg(record.detail[1])}}</td>
@@ -43,7 +59,7 @@ export default {
     props: {
         compId: { type: String },
         event: { type: String },
-        round: { type: String },
+        round: { type: Number },
         limit: { type: Number, default: 999 },
         type: { type: String, default: '2' },
         isFinal: { type: Boolean, default: false }

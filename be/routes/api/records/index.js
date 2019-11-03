@@ -5,13 +5,21 @@ const Competition = require('../../../models/competitions')
 const Record = require("../../../models/records")
 const moment = require('moment')
 
-router.get('/', function(req, res) {
-    Competition.find()
-        .then(r => {
-            res.send({ success: true, comps: r})
+router.get('/person/:id', function(req, res) {
+    Record.find({ personId: req.params.id })
+        .sort({ date: -1, round: -1,  })
+        .then(records => {
+            const mod = {}
+            records.forEach(r => {
+                if(mod[r.event] == undefined) {
+                    mod[r.event] = []
+                }
+                mod[r.event].push(r)
+            })
+            res.send({ history: mod })
         })
         .catch(e => {
-            res.send({ success: false })
+            return next(createError(400, e.message))
         })
 })
 

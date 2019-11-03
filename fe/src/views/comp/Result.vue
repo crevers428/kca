@@ -7,7 +7,7 @@
         class="mt-4"
     >
         <v-tab v-for="round in event.rounds" :key="round.round" class="subtitle font-weight-bold">
-            <span v-if="Number(round.round) == event.rounds.length">결승</span>
+            <span v-if="round.round == event.rounds.length">결승</span>
             <span v-else>라운드 {{round.round}}</span>
         </v-tab>
     </v-tabs>

@@ -10,7 +10,7 @@ router.get('/:type(single|mean)/:ev/:limit?', function(req, res, next) {
     else db = RankingsMean
 
     const limit = (!req.params.limit) ? 100 : Number(req.params.limit)
-    
+
     db.find({ event: req.params.ev }).sort({ rank: 1 }).limit(limit)
         .then(r => {
             res.send({ ranking: r})
@@ -18,6 +18,18 @@ router.get('/:type(single|mean)/:ev/:limit?', function(req, res, next) {
         .catch(e => {
             next(createError(400, e.message))
         })
+})
+
+router.get('/person/:id', async function(req, res, next) {
+    try {
+        const single = await RankingsSingle.find({ personId: req.params.id })
+        const mean = await RankingsMean.find({ personId: req.params.id })
+
+        res.send({ single: single, mean: mean })
+    }
+    catch (e) {
+        next(createError(400, e.message))
+    }
 })
 
 router.all('*', function(req, res, next) {
