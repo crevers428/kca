@@ -16,6 +16,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+app.use(function(req, res, next) {
+    if (fs.existsSync('/etc/letsencrypt/live/' + cfg.domain + '/privkey.pem') && fs.existsSync('/etc/letsencrypt/live/' + cfg.domain + '/cert.pem') && fs.existsSync('/etc/letsencrypt/live/' + cfg.domain + '/chain.pem')) {
+        if(!req.secure) {
+            res.redirect('https://' + cfg.domain + req.url)
+        } else {
+            next ()
+        }
+    }    
+    next()
+})
+
 //DB : Mongodb
 const mongoose = require('mongoose')
 module.exports.mongoose = mongoose
