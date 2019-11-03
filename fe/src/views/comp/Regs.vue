@@ -5,7 +5,7 @@
         <v-tab>승인 명단 ({{ok.length}})</v-tab>
         <v-tab>삭제 명단 ({{del.length}})</v-tab>
     </v-tabs>
-    <v-tabs-items v-model="tab">
+    <v-tabs-items v-model="tab" touchless>
         <v-tab-item>
             <reg-table
                 v-bind:comp="comp"
