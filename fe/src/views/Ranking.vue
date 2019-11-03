@@ -99,9 +99,25 @@
                         <tbody v-if="ready">
                             <tr v-for="(r, i) in ranking" :key="i">
                                 <td class="text-right">{{ r.rank }}</td>
-                                <td class="text-center" style="white-space: nowrap;">{{ r.personName }}</td>
+                                <td class="text-center" style="white-space: nowrap;">
+                                    <router-link
+                                        :to="`/person/${r.personId}`"
+                                        class="none_underline"
+                                        style=" white-space: nowrap;"
+                                    >
+                                        {{ r.personName }}
+                                    </router-link>
+                                </td>
                                 <td class="text-right" style=" white-space: nowrap;">{{ timeReg(r.record) }}</td>
-                                <td><router-link :to="`comp/${r.compId}/results/${ev}`" class="none_underline" style=" white-space: nowrap;">{{ r.compName }}</router-link></td>
+                                <td>
+                                    <router-link
+                                        :to="`comp/${r.compId}/results/${ev}`"
+                                        class="none_underline"
+                                        style=" white-space: nowrap;"
+                                    >
+                                        {{ r.compName }}
+                                    </router-link>
+                                </td>
                                 <td></td>
                             </tr>
                         </tbody>

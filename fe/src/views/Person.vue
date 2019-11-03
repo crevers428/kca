@@ -1,5 +1,5 @@
 <template>
-<v-container class="person">
+<v-container class="person" style="max-width: 1600px">
     <v-row v-if="info">
         <v-col>
             <div class="display-1 pa-5">{{ info.name }}</div>

@@ -21,7 +21,15 @@
             <tbody v-if="records.length > 0">
                 <tr v-for="(record, i) in records" :key="record._id">
                     <td class="text-right">{{ (i > 0 && records[i - 1].place == record.place) ? '' : record.place }}</td>
-                    <td style="white-space: nowrap;">{{record.personName}}</td>
+                    <td style="white-space: nowrap;">
+                        <router-link
+                            :to="`/person/${record.personId}`"
+                            class="none_underline"
+                            style=" white-space: nowrap;"
+                        >
+                            {{ record.personName }}
+                        </router-link>
+                    </td>
                     <td></td>
                     <td class="text-right" style="font-size: 0.8rem; position: relative;">
                         <span
@@ -54,6 +62,11 @@
     </v-simple-table>
 </v-card>
 </template>
+<style>
+.none_underline a, .none_underline {
+    text-decoration: none;
+}
+</style>
 <script>
 export default {
     props: {
