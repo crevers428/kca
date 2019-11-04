@@ -30,7 +30,7 @@
                                 <td class="text-right">{{ timeReg(ranking.single[ranking.single.findIndex(i => i.event == ev.value)].record) }}</td>
                                 <td class="text-center">
                                     <span v-if="ranking.mean.findIndex(i => i.event == ev.value) >= 0">
-                                        {{ ranking.single[ranking.mean.findIndex(i => i.event == ev.value)].rank }}
+                                        {{ ranking.mean[ranking.mean.findIndex(i => i.event == ev.value)].rank }}
                                     </span>
                                 </td>
                                 <td class="text-right">
