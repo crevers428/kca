@@ -3,7 +3,7 @@
 <v-row>
     <v-container style="width:100%;" class="pa-5">
         <v-row class="pa-0">
-            <v-col cols=6>
+            <v-col md=6 sm=12>
                 <v-hover v-slot:default="{ hover }">
                     <v-card class="" outlined :elevation="hover ? 5 : 0" width="100%">
                         <v-card-text>

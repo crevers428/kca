@@ -7,6 +7,7 @@
     </navigation>
     <bar-comp v-if="mode == 'comp'"></bar-comp>
     <nav-comp v-if="mode == 'comp'"></nav-comp>
+    <nav-ranking v-if="mode == 'ranking'"></nav-ranking>
     <v-content>
         <router-view/>
     </v-content>
@@ -20,9 +21,10 @@ import appBar from './components/main/appBar.vue'
 import popSnack from './components/main/pop.vue'
 import navComp from './components/comp/nav.vue'
 import navCompTrigger from './components/comp/navTrigger.vue'
+import navRanking from './components/ranking/nav.vue'
 import barComp from './components/comp/bar.vue'
 export default {
-    components: { navigation, appBar, popSnack, navComp, navCompTrigger, barComp },
+    components: { navigation, appBar, popSnack, navComp, navCompTrigger, navRanking, barComp },
     name: 'App',
     data: () => ({
         navs: [
@@ -81,6 +83,7 @@ export default {
         mode () {
             if(this.$route.matched[0] != undefined) {
                 if(/^\/comp\/:id/g.test(this.$route.matched[0].path)) return 'comp'
+                else if(/^\/ranking/g.test(this.$route.matched[0].path)) return 'ranking'
                 else return ''
             }
             return ''

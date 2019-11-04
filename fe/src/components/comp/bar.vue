@@ -3,6 +3,7 @@
     app
     elevation=0
     style="border: 1px solid #D5D5D5; border-width: 0 0 1px 0;"
+    height='100px'
 >
     <v-toolbar-title>
         <div>{{comp.name}}</div>

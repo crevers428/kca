@@ -2,6 +2,7 @@
 <v-hover v-slot:default="{ hover }">
 <v-app-bar
     app
+    clipped-left
     :color="scrolled || hover || !appBarTrans ? 'indigo' : 'transparent'"
     dark
     :elevation="scrolled || hover || !appBarTrans ? 4 : 0"

@@ -1,82 +1,5 @@
 <template>
 <v-container height="100%">
-    <v-navigation-drawer
-        app
-        clipped-left
-        v-model="drawer"
-        left
-        :temporary="($vuetify.breakpoint.smAndDown) ? true : false"
-        :permanent="($vuetify.breakpoint.smAndDown) ? false : true"
-    >
-        <v-row class="ma-0 pa-2" justify="center">
-            옵션
-        </v-row>
-        <v-divider></v-divider>
-        <v-row class="ma-0 pa-0 mt-2">
-            <v-col class="ma-0 pa-0">
-                <v-btn
-                    tile large block
-                    :color="(limit == 100) ? '#BBDEFB' : 'white'"
-                    elevation=0
-                    @click="changeLimit(100)"
-                >
-                    100위
-                </v-btn>
-            </v-col>
-            <v-col class="ma-0 pa-0">
-                <v-btn
-                    tile large block
-                    :color="(limit == 1000) ? '#BBDEFB' : 'white'"
-                    elevation=0
-                    @click="changeLimit(1000)"
-                >
-                    1000위
-                </v-btn>
-            </v-col>
-        </v-row>
-        <v-row class="ma-0 pa-0 mb-2">
-            <v-col class="ma-0 pa-0">
-                <v-btn
-                    tile large block
-                    :color="(type == 'single') ? '#BBDEFB' : 'white'"
-                    @click="changeType('single')"
-                    elevation="0"
-                >
-                    싱글
-                </v-btn>
-            </v-col>
-            <v-col class="ma-0 pa-0">
-                <v-btn
-                    tile large block
-                    :color="(type == 'mean') ? '#BBDEFB' : 'white'"
-                    @click="changeType('mean')"
-                    elevation="0"
-                >
-                    평균
-                </v-btn>
-            </v-col>
-        </v-row>
-        <v-divider></v-divider>
-        <v-row class="ma-0 pa-2" justify="center">
-            종목
-        </v-row>
-        <v-divider></v-divider>
-        <v-row class="ma-0 pa-0" style="max-height: 50%; overflow: auto;">
-            <v-list style="width: 100%;">
-                <v-list-item
-                    v-for="(ofc, i) in ofcEvents"
-                    :key="i"
-                    :style="`background: ${(ofc.value == ev) ? '#BBDEFB' : 'transparent'};`"
-                    style="cursor: pointer;"
-                    @click="changeEv(ofc.value)"
-                >
-                    <v-list-item-title>
-                        {{ofc.text}}
-                    </v-list-item-title>
-                </v-list-item>
-            </v-list>
-        </v-row>
-    </v-navigation-drawer>
     <v-row justify="center">
         <v-col align="center">
             <div class="title">{{ofcEventsText[ev]}} {{(type == 'single') ? '싱글' : '평균'}}</div>
@@ -98,7 +21,7 @@
                         </thead>
                         <tbody v-if="ready">
                             <tr v-for="(r, i) in ranking" :key="i">
-                                <td class="text-right">{{ r.rank }}</td>
+                                <td class="text-right">{{ (i > 0 && ranking[i - 1].rank == r.rank) ? '' : r.rank }}</td>
                                 <td class="text-center" style="white-space: nowrap;">
                                     <router-link
                                         :to="`/person/${r.personId}`"
@@ -142,7 +65,7 @@
         v-show="$vuetify.breakpoint.smAndDown"
         color="indigo" fab large dark
         style="position: fixed; bottom: 1rem; right: 1rem;"
-        @click="drawer = !drawer"
+        @click="navDrawer"
     >
         <v-icon>subject</v-icon>
     </v-btn>
@@ -161,24 +84,19 @@ export default {
     data: function () {
         return {
             ready: false,
-            drawer: false,
             ofcEvents: ofcEvents.eventsArr,
             ofcEventsText: ofcEvents.events,
             ranking: [],
             ev: '333',
             type: 'single',
             limit: 100,
-            division: 'all',
-            divisions: [
-                { text: '전체', value: 'all'}
-            ],
-            limits: [
-                { text: '100위', value: 100 },
-                { text: '1000위', value: 1000 }
-            ]
+            division: 'all'
         }
     },
     methods: {
+        navDrawer () {
+            this.$EventBus.$emit('navRankingDrawer')
+        },
         changeEv (ev) {
             this.ev = ev
             this.setRanking()
@@ -227,6 +145,9 @@ export default {
     },
     mounted () {
         this.setRanking()
+        this.$EventBus.$on('rankingEv', ev => this.changeEv(ev))
+        this.$EventBus.$on('rankingLimit', limit => this.changeLimit(limit))
+        this.$EventBus.$on('rankingType', type => this.changeType(type))
     }
 }
 </script>

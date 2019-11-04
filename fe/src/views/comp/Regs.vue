@@ -1,39 +1,45 @@
 <template>
-<v-container max-width="100%">
-    <v-tabs v-model="tab">
-        <v-tab>대기 명단 ({{yet.length}})</v-tab>
-        <v-tab>승인 명단 ({{ok.length}})</v-tab>
-        <v-tab>삭제 명단 ({{del.length}})</v-tab>
-    </v-tabs>
-    <v-tabs-items v-model="tab" touchless>
-        <v-tab-item>
-            <reg-table
-                v-bind:comp="comp"
-                v-bind:people="yet"
-                v-on:editOn="editOn"
-                v-on:reset-regs="setRegs"
-                type="normal"
-            ></reg-table>
-        </v-tab-item>
-        <v-tab-item>
-            <reg-table
-                v-bind:comp="comp"
-                v-bind:people="ok"
-                v-on:editOn="editOn"
-                v-on:reset-regs="setRegs"
-                type="approve"
-            ></reg-table>
-        </v-tab-item>
-        <v-tab-item>
-            <reg-table
-                v-bind:comp="comp"
-                v-bind:people="del"
-                v-on:editOn="editOn"
-                v-on:reset-regs="setRegs"
-                type="deleted"
-            ></reg-table>
-        </v-tab-item>
-    </v-tabs-items>
+<v-container>
+    <v-row class="pl-3">
+        <v-tabs v-model="tab">
+            <v-tab>대기 명단 ({{yet.length}})</v-tab>
+            <v-tab>승인 명단 ({{ok.length}})</v-tab>
+            <v-tab>삭제 명단 ({{del.length}})</v-tab>
+        </v-tabs>
+    </v-row>
+    <v-row>
+        <v-col>
+            <v-tabs-items v-model="tab" touchless>
+                <v-tab-item>
+                    <reg-table
+                        v-bind:comp="comp"
+                        v-bind:people="yet"
+                        v-on:editOn="editOn"
+                        v-on:reset-regs="setRegs"
+                        type="normal"
+                    ></reg-table>
+                </v-tab-item>
+                <v-tab-item>
+                    <reg-table
+                        v-bind:comp="comp"
+                        v-bind:people="ok"
+                        v-on:editOn="editOn"
+                        v-on:reset-regs="setRegs"
+                        type="approve"
+                    ></reg-table>
+                </v-tab-item>
+                <v-tab-item>
+                    <reg-table
+                        v-bind:comp="comp"
+                        v-bind:people="del"
+                        v-on:editOn="editOn"
+                        v-on:reset-regs="setRegs"
+                        type="deleted"
+                    ></reg-table>
+                </v-tab-item>
+            </v-tabs-items>
+        </v-col>
+    </v-row>
     <v-dialog
         max-width="1024px"
         light
