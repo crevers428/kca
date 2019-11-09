@@ -1,8 +1,8 @@
 const mongoose = (module.parent.exports.mongoose) ? module.parent.exports.mongoose : require('mongoose')
 const cfg = require('../../config')
 const moment = require('moment')
-const Person = require('./people.js')
-const Record = require('./records.js')
+const Person = require('./people')
+const Record = require('./records')
 
 mongoose.set('useCreateIndex', true)
 

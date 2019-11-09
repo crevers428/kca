@@ -102,6 +102,19 @@ export default new Router({
     },
 
     {
+        path: '/record',
+        name: 'records',
+        component: () => import('./views/Record.vue'),
+        beforeEnter: pageCheck
+    },
+    {
+        path: '/record/:_id',
+        name: 'record',
+        component: () => import('./views/Record.vue'),
+        beforeEnter: pageCheck
+    },
+
+    {
         path: '/comp',
         name: 'comp',
         component: CompIndex

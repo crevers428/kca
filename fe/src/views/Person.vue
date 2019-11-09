@@ -65,7 +65,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(r, i) in history[ev.value]" :key="i">
+                            <tr v-for="(r, i) in history[ev.value]" :key="i" @click="$router.push(`/record/${r._id}`)">
                                 <td style="white-space: nowrap">
                                     <router-link
                                         v-if="i == 0 || history[ev.value][i - 1].compName != r.compName"

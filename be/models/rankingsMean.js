@@ -11,7 +11,8 @@ const rankingsMeanSchema = new mongoose.Schema({
     compId: { type: String, default: '' },
     compName: { type: String, default: '' },
     personId: { type: String, default: '', index: true },
-    personName: { type: String }
+    personName: { type: String },
+    detail: [{ type: Number }]
 })
 
 module.exports = mongoose.model('rankingsMean', rankingsMeanSchema)

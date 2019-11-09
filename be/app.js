@@ -22,7 +22,7 @@ app.use(cookieParser());
 //DB : Mongodb
 const mongoose = require('mongoose')
 module.exports.mongoose = mongoose
-mongoose.connect(cfg.dbUrl, {useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
+mongoose.connect(cfg.dbUrl, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }, (err) => {
     if (err) return console.log(err)
     console.log('mongoose connected!')
 })
