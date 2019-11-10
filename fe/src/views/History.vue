@@ -1,45 +1,51 @@
 <template>
-<v-container height="100%">
+<v-container>
     <v-row justify="center">
         <v-col align="center">
-            <div class="title">{{ofcEventsText[ev]}} {{(type == 'single') ? '싱글' : '평균'}}</div>
+            <div style="font-size: 2rem;">역대 기록</div>
         </v-col>
     </v-row>
     <v-row>
         <v-col>
-            <v-card outlined>
+            <v-card
+                outlined
+            >
                 <v-simple-table>
                     <template v-slot:default>
                         <thead>
                             <tr>
-                                <th class="text-center" style="width: 3.5rem; white-space: nowrap;">순위</th>
+                                <th class="text-center" style="width: 3.5rem; white-space: nowrap;">날짜</th>
                                 <th class="text-center" style="width: 7rem; white-space: nowrap;">이름</th>
                                 <th class="text-center" style="width: 5rem; white-space: nowrap;">기록</th>
-                                <th class="text-center" style="min-width: 10rem; white-space: nowrap;">대회</th>
+                                <th class="text-center" style="width: 10rem; white-space: nowrap;">대회</th>
+                                <th v-if="type == 'mean'" class="text-center" style="width: 10rem; white-space: nowrap;">기록 상세</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody v-if="ready">
-                            <tr v-for="(r, i) in ranking" :key="i">
-                                <td class="text-right">{{ (i > 0 && ranking[i - 1].rank == r.rank) ? '' : r.rank }}</td>
+                            <tr v-for="(r, i) in history">
+                                <td class="text-right" style="white-space: nowrap;">{{ $moment(r.date).format("ll")}}</td>
                                 <td class="text-center" style="white-space: nowrap;">
                                     <router-link
                                         :to="`/person/${r.personId}`"
                                         class="none_underline"
-                                        style=" white-space: nowrap;"
                                     >
                                         {{ r.personName }}
                                     </router-link>
                                 </td>
-                                <td class="text-right" style=" white-space: nowrap;">{{ timeReg(r.record) }}</td>
-                                <td>
+                                <td class="text-right">{{ (type == 'single') ? $_recordToText(r.best) : $_recordToText(r.mean) }}</td>
+                                <td style="white-space: nowrap;">
                                     <router-link
                                         :to="`/comp/${r.compId}/results/${ev}`"
                                         class="none_underline"
-                                        style=" white-space: nowrap;"
                                     >
                                         {{ r.compName }}
                                     </router-link>
+                                </td>
+                                <td v-if="type == 'mean'" style="white-space: nowrap;">
+                                    <div v-for="d in r.detail" style="display: inline-block; width: 3rem;" class="text-right">
+                                        {{ $_recordToText(d) }}
+                                    </div>
                                 </td>
                                 <td></td>
                             </tr>
@@ -71,83 +77,61 @@
     </v-btn>
 </v-container>
 </template>
-<style>
-.none_underline a, .none_underline {
-    text-decoration: none;
-}
-</style>
 <script>
 import { pop } from '../mixins/global/pop.js'
+import { recordTrans } from '../components/record/mixin.js'
 import ofcEvents from '../forms/events.js'
 export default {
-    mixins: [pop],
+    mixins: [pop, recordTrans],
     data: function () {
         return {
             ready: false,
             ofcEvents: ofcEvents.eventsArr,
             ofcEventsText: ofcEvents.events,
-            ranking: [],
-            ev: '333',
-            type: 'single',
-            limit: 100,
-            division: 'all'
+            ev: (this.$route.params.event) ? this.$route.params.event : '333',
+            type: (this.$route.params.type) ? this.$route.params.type : 'single',
+            history: []
         }
     },
     methods: {
-        navDrawer () {
-            this.$EventBus.$emit('navRankingDrawer')
+        navDrawer() {
+            this.$EventBus.$emit('navHistoryDrawer')
         },
-        changeEv (ev) {
-            this.ev = ev
-            this.setRanking()
-        },
-        changeType (type) {
-            this.type = type
-            this.setRanking()
-        },
-        changeLimit (limit) {
-            this.limit = limit
-            this.setRanking()
-        },
-        setRanking () {
+        setHistory() {
             this.ready = false
-            return this.$axios.get(`/ranking/${this.type}/${this.ev}/${this.limit}`)
-                .then(r => {
-                    this.ranking = r.data.ranking
+            this.$axios.get(`records/history/${this.ev}/${this.type}`)
+                .then( r => {
+                    this.history = r.data.r
                     this.ready = true
                 })
-                .catch(e => {
-                    console.error(e)
+                .catch( e => {
+                    this.$_error(e.message)
                 })
-        },
-        timeReg(time) {
-            if(time == -1) return 'DNS'
-            else if(time == 0) return 'DNF'
-            else {
-                const min = parseInt(time / 60000)
-                time = time % 60000
-                const sec = parseInt(time / 1000)
-                time = time % 1000
-                const mil = parseInt(time / 10)
-
-                let text = ''
-                if(min > 0) {
-                    text = String(min) + ":"
-                    if(sec < 10) text = text + "0"
-                }
-                text = text + String(sec) + "."
-                if(mil < 10) text = text + "0"
-                text = text + String(mil)
-
-                return text
-            }
         }
     },
-    mounted () {
-        this.setRanking()
-        this.$EventBus.$on('rankingEv', ev => this.changeEv(ev))
-        this.$EventBus.$on('rankingLimit', limit => this.changeLimit(limit))
-        this.$EventBus.$on('rankingType', type => this.changeType(type))
+    mounted() {
+        if(this.ev != undefined && this.ofcEventsText[this.ev] == undefined) {
+            this.$router.push('/404')
+        }
+
+        if(this.type != 'single' && this.type != 'mean') {
+            this.$router.push('/404')
+        }
+
+        this.$EventBus.$emit('historyOptInit', { ev: this.ev, type: this.type })
+
+        this.$EventBus.$on('historyEv', ev => {
+            this.ev = ev
+            this.$router.push(`/history/${this.ev}/${this.type}`).catch(e => {})
+            this.setHistory()
+        })
+        this.$EventBus.$on('historyType', type => {
+            this.type = type
+            this.$router.push(`/history/${this.ev}/${this.type}`).catch(e => {})
+            this.setHistory()
+        })
+
+        this.setHistory()
     }
 }
 </script>

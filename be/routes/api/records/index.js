@@ -19,7 +19,19 @@ router.get('/person/:id', function(req, res) {
                 }
                 mod[r.event].push(r)
             })
-            res.send({ history: mod })
+            return res.send({ history: mod })
+        })
+        .catch(e => {
+            return next(createError(400, e.message))
+        })
+})
+
+router.get('/history/:ev/:type', function(req, res) {
+    const type = (req.params.type == 'single') ? 'nrSingle' : 'nrMean'
+    Record.find({ event: req.params.ev, [type]: true })
+        .sort({ date: -1 })
+        .then(r => {
+            return res.send({ r: r})
         })
         .catch(e => {
             return next(createError(400, e.message))

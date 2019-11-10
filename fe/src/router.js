@@ -9,6 +9,7 @@ import Signup from './views/sign/Up.vue'
 import Ranking from './views/Ranking.vue'
 import People from './views/People.vue'
 import Person from './views/Person.vue'
+import History from './views/History.vue'
 
 import CompIndex from './views/comp/Index.vue'
 import CompResults from './views/comp/Results.vue'
@@ -88,6 +89,12 @@ export default new Router({
         path: '/ranking',
         name: 'ranking',
         component: Ranking
+    },
+
+    {
+        path: '/history/:event?/:type?',
+        name: 'history',
+        component: History
     },
 
     {

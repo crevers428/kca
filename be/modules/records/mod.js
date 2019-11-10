@@ -197,8 +197,6 @@ const mod = {
                             cond,
                             { $set: { [pbField]: false }
                         })
-
-                        console.log(needUpdate)
                     }
                 }
                 else {
@@ -571,6 +569,7 @@ const mod = {
     modTimes: function(_id, times) {
         return new Promise(async function(resolve, reject) {
             if(_id == undefined || times == undefined) return reject(new Error("invalid prameter."))
+
             try {
                 const r = await Record.findOne({ _id: _id })
                 const update = {

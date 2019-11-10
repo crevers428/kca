@@ -8,6 +8,7 @@
     <bar-comp v-if="mode == 'comp'"></bar-comp>
     <nav-comp v-if="mode == 'comp'"></nav-comp>
     <nav-ranking v-if="mode == 'ranking'"></nav-ranking>
+    <nav-history v-if="mode == 'history'"></nav-history>
     <v-content>
         <router-view/>
     </v-content>
@@ -15,6 +16,11 @@
     <pop-snack></pop-snack>
 </v-app>
 </template>
+<style>
+.none_underline a, .none_underline {
+    text-decoration: none;
+}
+</style>
 <script>
 import navigation from './components/main/nav.vue'
 import appBar from './components/main/appBar.vue'
@@ -22,9 +28,10 @@ import popSnack from './components/main/pop.vue'
 import navComp from './components/comp/nav.vue'
 import navCompTrigger from './components/comp/navTrigger.vue'
 import navRanking from './components/ranking/nav.vue'
+import navHistory from './components/history/nav.vue'
 import barComp from './components/comp/bar.vue'
 export default {
-    components: { navigation, appBar, popSnack, navComp, navCompTrigger, navRanking, barComp },
+    components: { navigation, appBar, popSnack, navComp, navCompTrigger, navRanking, navHistory, barComp },
     name: 'App',
     data: () => ({
         navs: [
@@ -72,6 +79,10 @@ export default {
                         to: "/ranking"
                     },
                     {
+                        title: '역대 기록',
+                        to: "/history"
+                    },
+                    {
                         title: '개인 기록',
                         to: "/person"
                     }
@@ -84,6 +95,7 @@ export default {
             if(this.$route.matched[0] != undefined) {
                 if(/^\/comp\/:id/g.test(this.$route.matched[0].path)) return 'comp'
                 else if(/^\/ranking/g.test(this.$route.matched[0].path)) return 'ranking'
+                else if(/^\/history/g.test(this.$route.matched[0].path)) return 'history'
                 else return ''
             }
             return ''
