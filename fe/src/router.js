@@ -114,8 +114,9 @@ export default new Router({
         component: () => import('./views/Record.vue'),
         beforeEnter: pageCheck
     },
+    
     {
-        path: '/record/:_id',
+        path: '/record/mod/:_id',
         name: 'record',
         component: () => import('./views/Record.vue'),
         beforeEnter: pageCheck

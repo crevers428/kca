@@ -1,10 +1,16 @@
 <template>
-<v-container>
-    <v-row align="center" justify="center">
-        <div class="display-1 font-weight-bold pa-5">개인 기록</div>
-    </v-row>
-    <v-row align="center" justify="center" class="pl-10 pr-10">
-        <v-col align="center">
+<v-container
+    :fill-height="!ready"
+>
+    <v-row align="center" justify="center" :class="(ready) ? '' : 'mt-n12'">
+        <v-col cols=12 align="center" :class="(ready) ? '' : 'mt-n12'">
+            <div
+                class="pa-5"
+                :class="(ready) ? '' : 'mb-10'"
+                style="font-size: 2.5rem;"
+            >
+                개인 기록
+            </div>
             <v-text-field
                 outlined
                 label="이름"
@@ -12,12 +18,15 @@
                 v-model="keyword"
                 append-outer-icon="search"
                 @click:append-outer="search"
+                @input="inputChanged"
                 v-on:keyup.enter="search"
+                autofocus
+                style="width: 30rem;"
             >
             </v-text-field>
         </v-col>
     </v-row>
-    <v-row>
+    <v-row v-show="ready" style="transition: 1s all ease;">
         <v-col>
             <v-simple-table>
                 <template v-slot:default>
@@ -87,14 +96,24 @@ export default {
             }
             await this.$axios.get(`person/search/${this.keyword}`)
                 .then( r => {
+                    this.ready = true
                     if(r.data.short) return this.message = '검색어가 너무 짧습니다.'
-                    if(r.data.people.length == 0) return this.message = '검색 결과가 없습니다.'
+                    if(r.data.people.length == 0) {
+                        this.people = []
+                        return this.message = '검색 결과가 없습니다.'
+                    }
                     this.people = r.data.people
                 })
                 .catch( e => {
                     this.$_error(e.message)
                 })
             this.searching = false
+        },
+        inputChanged () {
+            console.log("?")
+            if(this.keyword == '') {
+                this.ready = false
+            }
         }
     }
 }

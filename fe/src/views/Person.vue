@@ -5,7 +5,7 @@
             <div class="display-1 pa-5">{{ info.name }}</div>
         </v-col>
     </v-row>
-    <v-row v-if="ranking">
+    <v-row v-if="ranking.single.length > 0">
         <v-col cols=12 class="mb-0 pb-0">
             <div class="title">랭킹</div>
         </v-col>
@@ -24,20 +24,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="ev in ofc" :key="ev.value" v-if="ranking.single.findIndex(i => i.event == ev.value) >= 0">
-                                <td style="white-space: nowrap;" class="text-left">{{ ev.text }}</td>
-                                <td class="text-center">{{ ranking.single[ranking.single.findIndex(i => i.event == ev.value)].rank }}</td>
-                                <td class="text-right">{{ timeReg(ranking.single[ranking.single.findIndex(i => i.event == ev.value)].record) }}</td>
-                                <td class="text-center">
-                                    <span v-if="ranking.mean.findIndex(i => i.event == ev.value) >= 0">
-                                        {{ ranking.mean[ranking.mean.findIndex(i => i.event == ev.value)].rank }}
-                                    </span>
-                                </td>
-                                <td class="text-right">
-                                    <span v-if="ranking.mean.findIndex(i => i.event == ev.value) >= 0">
-                                        {{ timeReg(ranking.mean[ranking.mean.findIndex(i => i.event == ev.value)].record) }}
-                                    </span>
-                                </td>
+                            <tr v-for="rank in ranked" :key="rank.single.event">
+                                <td style="white-space: nowrap;" class="text-left">{{ ofcText[rank.single.event] }}</td>
+                                <td class="text-center">{{ rank.single.rank }}</td>
+                                <td class="text-right">{{ $_recordToText(rank.single.record) }}</td>
+                                <td class="text-center">{{ (rank.mean != undefined) ? rank.mean.rank : '' }}</td>
+                                <td class="text-right">{{ (rank.mean != undefined) ? $_recordToText(rank.mean.record) : ''}}</td>
                                 <td></td>
                             </tr>
                         </tbody>
@@ -46,9 +38,9 @@
             </v-card>
         </v-col>
     </v-row>
-    <v-row v-for="ev in ofc" v-if="history[ev.value] != undefined">
+    <v-row v-for="(h, g) in arrangedHistory" :key="g">
         <v-col cols=12 class="mb-0 pb-0">
-            <div class="title">{{ ev.text }}</div>
+            <div class="title">{{ ofcText[h[0].event] }}</div>
         </v-col>
         <v-col>
             <v-card outlined>
@@ -65,11 +57,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(r, i) in history[ev.value]" :key="i" @click="$router.push(`/record/${r._id}`)">
+                            <tr v-for="(r, i) in h" :key="i">
                                 <td style="white-space: nowrap">
                                     <router-link
-                                        v-if="i == 0 || history[ev.value][i - 1].compName != r.compName"
-                                        :to="`/comp/${r.compId}/results/${ev.value}`"
+                                        v-if="i == 0 || h[i - 1].compName != r.compName"
+                                        :to="`/comp/${r.compId}/results/${r.event}`"
                                     >
                                         {{ r.compName }}
                                     </router-link>
@@ -84,7 +76,7 @@
                                     >
                                         {{ (r.nrSingle) ? 'NR' : 'PB' }}
                                     </span>
-                                    {{ timeReg(r.best) }}
+                                    {{ $_recordToText(r.best) }}
                                 </td>
                                 <td class="text-right" style="position: relative;">
                                     <span
@@ -94,7 +86,7 @@
                                     >
                                         {{ (r.nrMean) ? 'NR' : 'PB' }}
                                     </span>
-                                    {{ timeReg(r.mean) }}
+                                    {{ $_recordToText(r.mean) }}
                                 </td>
                                 <td></td>
                             </tr>
@@ -113,70 +105,90 @@
 </style>
 <script>
 import { pop } from '../mixins/global/pop.js'
+import { recordTrans } from '../components/record/mixin.js'
 import ofcEvents from '../forms/events.js'
 export default {
-    mixins: [pop],
+    mixins: [pop, recordTrans],
     data: function () {
         return {
             ofc: ofcEvents.eventsArr,
+            ofcText: ofcEvents.events,
             ready: false,
             info: false,
-            ranking: false,
+            ranking: {
+                single: [],
+                mean: []
+            },
             history : []
         }
     },
+    computed: {
+        ranked() {
+            const dids = [
+            ]
+
+            if(this.ready) {
+                this.ofc.forEach(e => {
+                    const indexS = this.ranking.single.findIndex(i => e.value == i.event)
+                    const indexM = this.ranking.mean.findIndex(i => e.value == i.event)
+
+                    if(indexS >= 0) {
+                        const did = {
+                            single: this.ranking.single[indexS],
+                            mean: (indexM >= 0) ? this.ranking.mean[indexM] : null
+                        }
+                        dids.push(did)
+                    }
+                })
+            }
+
+            return dids
+        },
+        arrangedHistory() {
+            const arranged = []
+
+            if(this.ready) {
+                this.ofc.forEach(e => {
+                    if(this.history[e.value] != undefined) {
+                        arranged.push(this.history[e.value])
+                    }
+                })
+            }
+
+            return arranged
+        }
+    },
     methods: {
-        setPerson () {
+        async setPerson () {
             const id = this.$route.params.id
 
-            this.$axios.get(`person/${id}`)
-                .then(r => {
-                    if(!r.data.person) return this.$router.push('/404')
-                    this.info = r.data.person
-                })
-                .catch(e => {
-                    this.$_error(e.message)
-                })
+            await Promise.all([
+                this.$axios.get(`person/${id}`)
+                    .then(r => {
+                        if(!r.data.person) return this.$router.push('/404')
+                        this.info = r.data.person
+                    })
+                    .catch(e => {
+                        this.$_error(e.message)
+                    }),
+                this.$axios.get(`ranking/person/${id}`)
+                    .then(r => {
+                        this.ranking.mean = r.data.mean
+                        this.ranking.single = r.data.single
+                    })
+                    .catch(e => {
+                        this.$_error(e.message)
+                    }),
+                    this.$axios.get(`records/person/${id}`)
+                        .then(r => {
+                            this.history = r.data.history
+                        })
+                        .catch(e => {
+                            this.$_error(e.message)
+                        })
+            ])
 
-            this.$axios.get(`ranking/person/${id}`)
-                .then(r => {
-                    this.ranking = {}
-                    this.ranking.mean = r.data.mean
-                    this.ranking.single = r.data.single
-                })
-                .catch(e => {
-                    this.$_error(e.message)
-                })
-
-            this.$axios.get(`records/person/${id}`)
-                .then(r => {
-                    this.history = r.data.history
-                })
-                .catch(e => {
-                    this.$_error(e.message)
-                })
-        },
-        timeReg(time) {
-            if(time == -1) return 'DNS'
-            else if(time == 0) return 'DNF'
-            else {
-                const min = parseInt(time / 60000)
-                time = time % 60000
-                const sec = parseInt(time / 1000)
-                time = time % 1000
-                const mil = parseInt(time / 10)
-
-                let text = ''
-                if(min > 0) {
-                    text = String(min) + ":"
-                    if(sec < 10) text = text + "0"
-                }
-                text = text + String(sec) + "."
-                if(mil < 10) text = text + "0"
-                text = text + String(mil)
-
-                return text
-            }
+            this.ready = true
         }
     },
     mounted () {

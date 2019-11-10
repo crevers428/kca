@@ -23,7 +23,7 @@
                             </tr>
                         </thead>
                         <tbody v-if="ready">
-                            <tr v-for="(r, i) in history">
+                            <tr v-for="(r, i) in history" :key="i">
                                 <td class="text-right" style="white-space: nowrap;">{{ $moment(r.date).format("ll")}}</td>
                                 <td class="text-center" style="white-space: nowrap;">
                                     <router-link
@@ -43,7 +43,7 @@
                                     </router-link>
                                 </td>
                                 <td v-if="type == 'mean'" style="white-space: nowrap;">
-                                    <div v-for="d in r.detail" style="display: inline-block; width: 3rem;" class="text-right">
+                                    <div v-for="(d, j) in r.detail" style="display: inline-block; width: 3rem;" class="text-right" :key="j">
                                         {{ $_recordToText(d) }}
                                     </div>
                                 </td>
@@ -122,12 +122,12 @@ export default {
 
         this.$EventBus.$on('historyEv', ev => {
             this.ev = ev
-            this.$router.push(`/history/${this.ev}/${this.type}`).catch(e => {})
+            this.$router.push(`/history/${this.ev}/${this.type}`).catch(() => {})
             this.setHistory()
         })
         this.$EventBus.$on('historyType', type => {
             this.type = type
-            this.$router.push(`/history/${this.ev}/${this.type}`).catch(e => {})
+            this.$router.push(`/history/${this.ev}/${this.type}`).catch(( )=> {})
             this.setHistory()
         })
 

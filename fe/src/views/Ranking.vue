@@ -127,19 +127,19 @@ export default {
 
         this.$EventBus.$on('rankingEv', ev => {
             this.ev = ev
-            this.$router.push(`/ranking/${this.ev}/${this.type}/${this.limit}`).catch(e => {})
+            this.$router.push(`/ranking/${this.ev}/${this.type}/${this.limit}`).catch(() => {})
             this.setRanking()
         })
 
         this.$EventBus.$on('rankingType', type => {
             this.type = type
-            this.$router.push(`/ranking/${this.ev}/${this.type}/${this.limit}`).catch(e => {})
+            this.$router.push(`/ranking/${this.ev}/${this.type}/${this.limit}`).catch(() => {})
             this.setRanking()
         })
 
         this.$EventBus.$on('rankingLimit', limit => {
             this.limit = limit
-            this.$router.push(`/ranking/${this.ev}/${this.type}/${this.limit}`).catch(e => {})
+            this.$router.push(`/ranking/${this.ev}/${this.type}/${this.limit}`).catch(() => {})
             this.setRanking()
         })
 

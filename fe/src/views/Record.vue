@@ -64,7 +64,7 @@ export default {
         },
         submit () {
             this.$axios.put(`records/mod/${ this.$route.params._id }`, { detail: this.record.detail })
-                .then(r => {
+                .then(() => {
                     this.setRecord()
                     this.$_pop('기록이 수정되었습니다.')
                 })
