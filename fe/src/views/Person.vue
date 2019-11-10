@@ -59,6 +59,7 @@
                                         <th class="text-center" style="width: 3rem; white-space: nowrap;">순위</th>
                                         <th class="text-center" style="width: 3rem; white-space: nowrap;">싱글 기록</th>
                                         <th class="text-center" style="width: 5rem; white-space: nowrap;">평균 기록</th>
+                                        <th class="text-center" style="width: 5rem;">기록 상세</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -93,6 +94,16 @@
                                                 {{ (r.nrMean) ? 'NR' : 'PB' }}
                                             </span>
                                             {{ $_recordToText(r.mean) }}
+                                        </td>
+                                        <td style="white-space: nowrap;" class="pl-10">
+                                            <div
+                                                v-for="(d, j) in r.detail"
+                                                :key="j"
+                                                style="display: inline-block; width: 4rem;"
+                                                class="pl-3 pr-3 text-right"
+                                            >
+                                                {{ $_recordToText(d) }}
+                                            </div>
                                         </td>
                                         <td></td>
                                     </tr>
