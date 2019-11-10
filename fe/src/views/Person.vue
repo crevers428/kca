@@ -5,7 +5,7 @@
             <div class="display-1">{{ info.name }}</div>
             <div class="pl-1 pt-2" style="font-size: 0.9rem; color: #757575;">{{ info.id }}</div>
         </div>
-        <v-tabs hide-slider v-model="tab" show-arrows>
+        <v-tabs hide-slider v-model="tab" show-arrows style="background: transparent;">
             <v-tab style="text-transform: initial;">
                 랭킹
             </v-tab>
@@ -17,7 +17,7 @@
     <v-divider></v-divider>
     <v-row>
         <v-col>
-            <v-tabs-items v-model="tab">
+            <v-tabs-items v-model="tab" touchless>
                 <v-tab-item>
                     <v-card outlined>
                         <v-simple-table v-if="ranking.single.length > 0">
