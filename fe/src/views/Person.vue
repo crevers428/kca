@@ -1,99 +1,107 @@
 <template>
 <v-container class="person" style="max-width: 1600px">
     <v-row v-if="info">
-        <v-col>
-            <div class="display-1 pa-5">{{ info.name }}</div>
+        <v-col cols=12 class="pb-0">
+            <div class="pa-5">
+                <div class="display-1">{{ info.name }}</div>
+                <div class="pl-1 pt-2" style="font-size: 0.9rem; color: #757575;">{{ info.id }}</div>
+            </div>
+            <v-tabs hide-slider v-model="tab">
+                <v-tab style="text-transform: initial;">
+                    랭킹
+                </v-tab>
+                <v-tab v-for="h in arrangedHistory" style="text-transform: initial;">
+                    {{ ofcText[h[0].event]}}
+                </v-tab>
+            </v-tabs>
         </v-col>
     </v-row>
-    <v-row v-if="ranking.single.length > 0">
-        <v-col cols=12 class="mb-0 pb-0">
-            <div class="title">랭킹</div>
-        </v-col>
+    <v-divider></v-divider>
+    <v-row>
         <v-col>
-            <v-card outlined>
-                <v-simple-table>
-                    <template v-slot:default>
-                        <thead>
-                            <tr>
-                                <th class="text-center" style="width: 7rem; white-space: nowrap;">종목</th>
-                                <th class="text-center" style="width: 3rem; white-space: nowrap;">싱글 순위</th>
-                                <th class="text-center" style="width: 5rem; white-space: nowrap;">싱글 기록</th>
-                                <th class="text-center" style="width: 3rem; white-space: nowrap;">평균 순위</th>
-                                <th class="text-center" style="width: 5rem; white-space: nowrap;">평균 기록</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="rank in ranked" :key="rank.single.event">
-                                <td style="white-space: nowrap;" class="text-left">{{ ofcText[rank.single.event] }}</td>
-                                <td class="text-center">{{ rank.single.rank }}</td>
-                                <td class="text-right">{{ $_recordToText(rank.single.record) }}</td>
-                                <td class="text-center">{{ (rank.mean != undefined) ? rank.mean.rank : '' }}</td>
-                                <td class="text-right">{{ (rank.mean != undefined) ? $_recordToText(rank.mean.record) : ''}}</td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </template>
-                </v-simple-table>
-            </v-card>
-        </v-col>
-    </v-row>
-    <v-row v-for="(h, g) in arrangedHistory" :key="g">
-        <v-col cols=12 class="mb-0 pb-0">
-            <div class="title">{{ ofcText[h[0].event] }}</div>
-        </v-col>
-        <v-col>
-            <v-card outlined>
-                <v-simple-table>
-                    <template v-slot:default>
-                        <thead>
-                            <tr>
-                                <th class="text-center" style="width: 7rem; white-space: nowrap;">대회</th>
-                                <th class="text-center" style="width: 3rem; white-space: nowrap;">라운드</th>
-                                <th class="text-center" style="width: 3rem; white-space: nowrap;">순위</th>
-                                <th class="text-center" style="width: 3rem; white-space: nowrap;">싱글 기록</th>
-                                <th class="text-center" style="width: 5rem; white-space: nowrap;">평균 기록</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(r, i) in h" :key="i">
-                                <td style="white-space: nowrap">
-                                    <router-link
-                                        v-if="i == 0 || h[i - 1].compName != r.compName"
-                                        :to="`/comp/${r.compId}/results/${r.event}`"
-                                    >
-                                        {{ r.compName }}
-                                    </router-link>
-                                </td>
-                                <td class="text-center">{{ r.round }}</td>
-                                <td class="text-center">{{ r.place }}</td>
-                                <td class="text-right" style="position: relative;">
-                                    <span
-                                        v-if="r.pbSingle || r.nrSingle"
-                                        style="position: absolute; top: 1px; right: 1px; font-size: 0.6rem;"
-                                        :style="`color: ${(r.nrSingle) ? '#E64A19' : '#0277BD'};`"
-                                    >
-                                        {{ (r.nrSingle) ? 'NR' : 'PB' }}
-                                    </span>
-                                    {{ $_recordToText(r.best) }}
-                                </td>
-                                <td class="text-right" style="position: relative;">
-                                    <span
-                                        v-if="r.pbMean || r.nrMean"
-                                        style="position: absolute; top: 1px; right: 1px; font-size: 0.6rem;"
-                                        :style="`color: ${(r.nrMean) ? '#E64A19' : '#0277BD'};`"
-                                    >
-                                        {{ (r.nrMean) ? 'NR' : 'PB' }}
-                                    </span>
-                                    {{ $_recordToText(r.mean) }}
-                                </td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </template>
-                </v-simple-table>
-            </v-card>
+            <v-tabs-items v-model="tab">
+                <v-tab-item>
+                    <v-card outlined>
+                        <v-simple-table v-if="ranking.single.length > 0">
+                            <template v-slot:default>
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" style="width: 7rem; white-space: nowrap;">종목</th>
+                                        <th class="text-center" style="width: 3rem; white-space: nowrap;">싱글 순위</th>
+                                        <th class="text-center" style="width: 5rem; white-space: nowrap;">싱글 기록</th>
+                                        <th class="text-center" style="width: 3rem; white-space: nowrap;">평균 순위</th>
+                                        <th class="text-center" style="width: 5rem; white-space: nowrap;">평균 기록</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="rank in ranked" :key="rank.single.event">
+                                        <td style="white-space: nowrap;" class="text-left">{{ ofcText[rank.single.event] }}</td>
+                                        <td class="text-center">{{ rank.single.rank }}</td>
+                                        <td class="text-right">{{ $_recordToText(rank.single.record) }}</td>
+                                        <td class="text-center">{{ (rank.mean != undefined) ? rank.mean.rank : '' }}</td>
+                                        <td class="text-right">{{ (rank.mean != undefined) ? $_recordToText(rank.mean.record) : ''}}</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </template>
+                        </v-simple-table>
+                    </v-card>
+                </v-tab-item>
+                <v-tab-item v-for="(h, g) in arrangedHistory" :key="g">
+                    <v-card outlined>
+                        <v-simple-table>
+                            <template v-slot:default>
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" style="width: 7rem; white-space: nowrap;">대회</th>
+                                        <th class="text-center" style="width: 3rem; white-space: nowrap;">라운드</th>
+                                        <th class="text-center" style="width: 3rem; white-space: nowrap;">순위</th>
+                                        <th class="text-center" style="width: 3rem; white-space: nowrap;">싱글 기록</th>
+                                        <th class="text-center" style="width: 5rem; white-space: nowrap;">평균 기록</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(r, i) in h" :key="i">
+                                        <td style="white-space: nowrap">
+                                            <router-link
+                                                v-if="i == 0 || h[i - 1].compName != r.compName"
+                                                :to="`/comp/${r.compId}/results/${r.event}`"
+                                            >
+                                                {{ r.compName }}
+                                            </router-link>
+                                        </td>
+                                        <td class="text-center">{{ r.round }}</td>
+                                        <td class="text-center">{{ r.place }}</td>
+                                        <td class="text-right" style="position: relative;">
+                                            <span
+                                                v-if="r.pbSingle || r.nrSingle"
+                                                style="position: absolute; top: 1px; right: 1px; font-size: 0.6rem;"
+                                                :style="`color: ${(r.nrSingle) ? '#E64A19' : '#0277BD'};`"
+                                            >
+                                                {{ (r.nrSingle) ? 'NR' : 'PB' }}
+                                            </span>
+                                            {{ $_recordToText(r.best) }}
+                                        </td>
+                                        <td class="text-right" style="position: relative;">
+                                            <span
+                                                v-if="r.pbMean || r.nrMean"
+                                                style="position: absolute; top: 1px; right: 1px; font-size: 0.6rem;"
+                                                :style="`color: ${(r.nrMean) ? '#E64A19' : '#0277BD'};`"
+                                            >
+                                                {{ (r.nrMean) ? 'NR' : 'PB' }}
+                                            </span>
+                                            {{ $_recordToText(r.mean) }}
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </template>
+                        </v-simple-table>
+                    </v-card>
+                </v-tab-item>
+            </v-tabs-items>
         </v-col>
     </v-row>
 </v-container>
@@ -114,6 +122,7 @@ export default {
             ofc: ofcEvents.eventsArr,
             ofcText: ofcEvents.events,
             ready: false,
+            tab: 0,
             info: false,
             ranking: {
                 single: [],

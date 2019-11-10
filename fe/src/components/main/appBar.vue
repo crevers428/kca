@@ -10,15 +10,15 @@
 >
     <!-- -->
     <v-card
-        v-show="hover && !$vuetify.breakpoint.smAndDown"
         style="
             position:absolute;
             top:100%;
             width:100%;
-            height: 200px;
             background:white;
             left:0;
+            transition: 1s all ease;
         "
+        :style="`height: ${(hover && !$vuetify.breakpoint.smAndDown) ? '200px' : '0'};`"
     >
     </v-card>
     <v-toolbar-title class="text-uppercase" @click="$router.push('/')">
@@ -32,19 +32,27 @@
             :key="i"
             color="transparent"
             width="150px"
+            :style="`
+                height: ${(hover) ? 200 + $vuetify.application.top : $vuetify.application.top }px;
+                overflow: hidden;
+                transition: 1s height ease;
+            `"
         >
             <v-list-item class="text-center mb-5" :to="nav.to">
-                <v-list-item-title style="font-size:1.2rem;">{{nav.title}}</v-list-item-title>
+                <v-list-item-title style="font-size:1.2rem;">{{ nav.title }}</v-list-item-title>
             </v-list-item>
             <v-list-item
                 v-for="(sub, k) in nav.subs"
-                v-show="hover"
                 :key="k"
                 class="text-center"
                 :to="sub.to"
                 light
             >
-                <v-list-item-title style="color: black;">{{sub.title}}</v-list-item-title>
+                <v-list-item-title
+                    style="color: black;"
+                >
+                    {{ sub.title }}
+                </v-list-item-title>
             </v-list-item>
         </v-list>
     </v-toolbar-items>
@@ -53,7 +61,7 @@
         <v-icon dense color="error">power_settings_new</v-icon>
     </v-btn>
     <v-btn icon @click="signout" v-else>
-        <v-icon dense color="white">power_settings_new</v-icon>
+        <v-icon dense color="#4CAF50">power_settings_new</v-icon>
     </v-btn>
     <!-- <v-btn icon to="/user">
         <v-icon dense>account_circle</v-icon>
@@ -86,5 +94,8 @@ export default {
         }
     },
     components: {},
+    mounted () {
+        console.log(this.$vuetify)
+    }
 }
 </script>
