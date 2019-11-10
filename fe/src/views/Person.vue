@@ -1,20 +1,18 @@
 <template>
 <v-container class="person" style="max-width: 1600px">
     <v-row v-if="info">
-        <v-col cols=12 class="pb-0">
-            <div class="pa-5">
-                <div class="display-1">{{ info.name }}</div>
-                <div class="pl-1 pt-2" style="font-size: 0.9rem; color: #757575;">{{ info.id }}</div>
-            </div>
-            <v-tabs hide-slider v-model="tab">
-                <v-tab style="text-transform: initial;">
-                    랭킹
-                </v-tab>
-                <v-tab v-for="h in arrangedHistory" style="text-transform: initial;">
-                    {{ ofcText[h[0].event]}}
-                </v-tab>
-            </v-tabs>
-        </v-col>
+        <div class="pa-5">
+            <div class="display-1">{{ info.name }}</div>
+            <div class="pl-1 pt-2" style="font-size: 0.9rem; color: #757575;">{{ info.id }}</div>
+        </div>
+        <v-tabs hide-slider v-model="tab" show-arrows>
+            <v-tab style="text-transform: initial;">
+                랭킹
+            </v-tab>
+            <v-tab v-for="h in arrangedHistory" style="text-transform: initial;">
+                {{ ofcText[h[0].event]}}
+            </v-tab>
+        </v-tabs>
     </v-row>
     <v-divider></v-divider>
     <v-row>

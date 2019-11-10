@@ -56,7 +56,7 @@ module.exports = {
         const mean3 = ['666', '777', '333bf', '333fmc', '444bf', '555bf']
         const mean5 = ['222', '333', '444', '555', '666', '777', '333bf',
                         '333oh', '333fmc' ,'333ft', 'minx', 'pyram', 'sq1',
-                        'skewb', 'clock', '332', '223', 'ivy', '222br', '333bf',
+                        'skewb', 'clock', '332', '223', 'ivy', '222br', '333br',
                         '444br', 'pyrambr', 'skewbbr', 'mirror', 'mirrorbr', 'gear']
         if((type == 'a' && mean5.indexOf(ev) >= 0) || ((type =='m' || type == '3') && mean3.indexOf(ev) >= 0)) {
             return true

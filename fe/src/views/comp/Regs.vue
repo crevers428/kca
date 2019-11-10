@@ -1,7 +1,7 @@
 <template>
 <v-container>
     <v-row class="pl-3">
-        <v-tabs v-model="tab">
+        <v-tabs v-model="tab" show-arrows>
             <v-tab>대기 명단 ({{yet.length}})</v-tab>
             <v-tab>승인 명단 ({{ok.length}})</v-tab>
             <v-tab>삭제 명단 ({{del.length}})</v-tab>

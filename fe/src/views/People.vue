@@ -114,7 +114,6 @@ export default {
             this.searching = false
         },
         inputChanged () {
-            console.log("?")
             if(this.keyword == '') {
                 this.ready = false
             }
