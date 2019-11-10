@@ -1,8 +1,10 @@
 const mongoose = (module.parent.exports.mongoose) ? module.parent.exports.mongoose : require('mongoose')
+
 const Record = require('../../models/records')
 const RankingsMean = require('../../models/rankingsMean')
 const RankingsSingle = require('../../models/rankingsSingle')
 const Competition = require('../../models/competitions')
+
 const tool = require('./tool')
 const moment = require('moment')
 const test = function () {
@@ -180,14 +182,6 @@ const mod = {
                         }
                     }
                     else if(oldRecord[field] > record[field]) {
-                        const nextNr = await Record.findOne({
-                                event: record.event,
-                                personId: record.personId,
-                                [pbField]: true,
-                                [field]: { $lte: record[field] }
-                            })
-                            .sort({ date: 1, round: 1 })
-
                         const cond = {
                             event: record.event,
                             personId: record.personId,
@@ -199,27 +193,18 @@ const mod = {
                             ]
                         }
 
-                        if(nextNr) {
-                            cond.$or[1].date.$lt = nextNr.date
-                            cond.$or[2] = { date: nextNr.date, round: { $lt: nextNr.round } }
-                        }
+                        const needUpdate = await Record.updateMany(
+                            cond,
+                            { $set: { [pbField]: false }
+                        })
 
-                        const needUpdate = await Record.updateMany({cond},
-                        { $set: { [pbField]: false } })
+                        console.log(needUpdate)
                     }
                 }
                 else {
                     if(record[field] > 0 && (oldRecord[field] <= 0 || oldRecord[field] > record[field])) {
                         pb = await mod.checkPb(record, isMean)
                         if(pb) {
-                            const nextNr = await Record.findOne({
-                                    event: record.event,
-                                    personId: record.personId,
-                                    [pbField]: true,
-                                    [field]: { $lte: record[field] }
-                                })
-                                .sort({ date: 1, round: 1 })
-
                             const cond = {
                                 event: record.event,
                                 personId: record.personId,
@@ -231,13 +216,10 @@ const mod = {
                                 ]
                             }
 
-                            if(nextNr) {
-                                cond.$or[1].date.$lt = nextNr.date
-                                cond.$or[2] = { date: nextNr.date, round: { $lt: nextNr.round } }
-                            }
-
-                            const needUpdate = await Record.updateMany({cond},
-                            { $set: { [pbField]: false } })
+                            const needUpdate = await Record.updateMany(
+                                cond,
+                                { $set: { [pbField]: false }
+                            })
                         }
                     }
                 }
@@ -582,6 +564,34 @@ const mod = {
             }
             catch (e) {
                 reject(e)
+            }
+        })
+    },
+
+    modTimes: function(_id, times) {
+        return new Promise(async function(resolve, reject) {
+            if(_id == undefined || times == undefined) return reject(new Error("invalid prameter."))
+            try {
+                const r = await Record.findOne({ _id: _id })
+                const update = {
+                    detail: times,
+                    best: tool.getBest(times)
+                }
+                if(r.type == 'a' || r.type == 'm') {
+                    update.mean = tool.getMean(times)
+                }
+
+                const detailUpdated = await Record.findOneAndUpdate({ _id: _id }, update, { new: true })
+                await mod.placing(r.compId, r.event, r.round)
+                const checkedPb = await mod.pbByMod(detailUpdated, r)
+                const checkedNr = await mod.nrByMod(checkedPb, r)
+                await Record.updateOne({ _id: checkedNr._id }, checkedNr)
+                await mod.ranking(r.personId, r.event)
+
+                return resolve()
+            }
+            catch(e) {
+                return reject(e)
             }
         })
     }

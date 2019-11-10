@@ -41,28 +41,12 @@ router.put('/mod/:_id', async function(req, res, next) {
     const _id = req.params._id
 
     try {
-        console.time("test")
         if(Object.prototype.toString.call(detail) != '[object Array]' || detail.length == 0) {
             throw new Error("Invalid value: detail.notArray")
         }
 
-        const r = await Record.findOne({ _id: _id })
-        const update = {
-            detail: detail,
-            best: RecordTool.getBest(detail)
-        }
-        if(r.type == 'a' || r.type == 'm') {
-            update.mean = RecordTool.getMean(detail)
-        }
+        await RecordMod.modTimes(_id, detail)
 
-        const detailUpdated = await Record.findOneAndUpdate({ _id: _id }, update, { new: true })
-        await RecordMod.placing(r.compId, r.event, r.round)
-        const checkedPb = await RecordMod.pbByMod(detailUpdated, r)
-        const checkedNr = await RecordMod.nrByMod(checkedPb, r)
-        await Record.updateOne({ _id: checkedNr._id }, checkedNr)
-        await RecordMod.ranking(r.personId, r.event)
-
-        console.timeEnd("test")
         return res.send()
     }
     catch (e) {
