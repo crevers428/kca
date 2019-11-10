@@ -107,6 +107,11 @@ export default {
         }
     },
     mounted () {
+        this.$EventBus.$on('rankingOptInit', opt => {
+            this.ev = opt.ev
+            this.type = opt.type
+            this.limit = opt.limit
+        })
         this.$EventBus.$on('navRankingDrawer', () => this.drawer = !this.drawer)
     }
 }

@@ -86,7 +86,7 @@ export default new Router({
     },
 
     {
-        path: '/ranking',
+        path: '/ranking/:event?/:type?/:limit?',
         name: 'ranking',
         component: Ranking
     },

@@ -31,7 +31,7 @@
                                         {{ r.personName }}
                                     </router-link>
                                 </td>
-                                <td class="text-right" style=" white-space: nowrap;">{{ timeReg(r.record) }}</td>
+                                <td class="text-right" style=" white-space: nowrap;">{{ $_recordToText(r.record) }}</td>
                                 <td>
                                     <router-link
                                         :to="`/comp/${r.compId}/results/${ev}`"
@@ -78,36 +78,25 @@
 </style>
 <script>
 import { pop } from '../mixins/global/pop.js'
+import { recordTrans } from '../components/record/mixin.js'
 import ofcEvents from '../forms/events.js'
 export default {
-    mixins: [pop],
+    mixins: [pop, recordTrans],
     data: function () {
         return {
             ready: false,
             ofcEvents: ofcEvents.eventsArr,
             ofcEventsText: ofcEvents.events,
             ranking: [],
-            ev: '333',
-            type: 'single',
-            limit: 100,
-            division: 'all'
+            ev: (this.$route.params.event) ? this.$route.params.event : '333',
+            type: (this.$route.params.type) ? this.$route.params.type : 'single',
+            limit: (this.$route.params.limit) ? this.$route.params.limit : 100,
+            division: (this.$route.params.division) ? this.$route.params.division : 'all'
         }
     },
     methods: {
         navDrawer () {
             this.$EventBus.$emit('navRankingDrawer')
-        },
-        changeEv (ev) {
-            this.ev = ev
-            this.setRanking()
-        },
-        changeType (type) {
-            this.type = type
-            this.setRanking()
-        },
-        changeLimit (limit) {
-            this.limit = limit
-            this.setRanking()
         },
         setRanking () {
             this.ready = false
@@ -119,35 +108,42 @@ export default {
                 .catch(e => {
                     console.error(e)
                 })
-        },
-        timeReg(time) {
-            if(time == -1) return 'DNS'
-            else if(time == 0) return 'DNF'
-            else {
-                const min = parseInt(time / 60000)
-                time = time % 60000
-                const sec = parseInt(time / 1000)
-                time = time % 1000
-                const mil = parseInt(time / 10)
-
-                let text = ''
-                if(min > 0) {
-                    text = String(min) + ":"
-                    if(sec < 10) text = text + "0"
-                }
-                text = text + String(sec) + "."
-                if(mil < 10) text = text + "0"
-                text = text + String(mil)
-
-                return text
-            }
         }
     },
     mounted () {
+        if(this.ev != undefined && this.ofcEventsText[this.ev] == undefined) {
+            this.$router.push('/404')
+        }
+
+        if(this.type != 'single' && this.type != 'mean') {
+            this.$router.push('/404')
+        }
+
+        if(this.limit != 100 && this.type != 1000) {
+            this.$router.push('/404')
+        }
+
+        this.$EventBus.$emit('rankingOptInit', { ev: this.ev, type: this.type, limit: this.limit })
+
+        this.$EventBus.$on('rankingEv', ev => {
+            this.ev = ev
+            this.$router.push(`/ranking/${this.ev}/${this.type}/${this.limit}`).catch(e => {})
+            this.setRanking()
+        })
+
+        this.$EventBus.$on('rankingType', type => {
+            this.type = type
+            this.$router.push(`/ranking/${this.ev}/${this.type}/${this.limit}`).catch(e => {})
+            this.setRanking()
+        })
+
+        this.$EventBus.$on('rankingLimit', limit => {
+            this.limit = limit
+            this.$router.push(`/ranking/${this.ev}/${this.type}/${this.limit}`).catch(e => {})
+            this.setRanking()
+        })
+
         this.setRanking()
-        this.$EventBus.$on('rankingEv', ev => this.changeEv(ev))
-        this.$EventBus.$on('rankingLimit', limit => this.changeLimit(limit))
-        this.$EventBus.$on('rankingType', type => this.changeType(type))
     }
 }
 </script>
