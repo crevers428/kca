@@ -1,6 +1,7 @@
 <template>
 <v-container
     :fill-height="!ready"
+    style="width: 100%;"
 >
     <v-row align="center" justify="center" :class="(ready) ? '' : 'mt-n12'">
         <v-col cols=12 align="center" :class="(ready) ? '' : 'mt-n12'">
@@ -26,47 +27,50 @@
             </v-text-field>
         </v-col>
     </v-row>
+    <v-divider v-show="ready" ></v-divider>
     <v-row v-show="ready" style="transition: 1s all ease;">
         <v-col>
-            <v-simple-table>
-                <template v-slot:default>
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th class="text-center" style="width: 7rem; white-space: nowrap;">아이디</th>
-                            <th class="text-center" style="width: 7rem; white-space: nowrap;">이름</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody v-if="message">
-                        <tr>
-                            <td colspan=4 class="text-center pa-5">
-                                {{ message }}
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tbody v-if="!searching">
-                        <tr v-for="(p, i) in people" :key="i" @click="$router.push(`/person/${p.id}`)">
-                            <td></td>
-                            <td style="white-space: nowrap;" class="text-center">{{ p.id }}</td>
-                            <td style="white-space: nowrap;" class="text-center">{{ p.name }}</td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                    <tbody v-else>
-                        <tr>
-                            <td colspan=4 class="text-center pt-10 pb-10">
-                                <v-progress-circular
-                                    :size="70"
-                                    :width="7"
-                                    color="grey"
-                                    indeterminate
-                                ></v-progress-circular>
-                            </td>
-                        </tr>
-                    </tbody>
-                </template>
-            </v-simple-table>
+            <v-card outlined>
+                <v-simple-table>
+                    <template v-slot:default>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th class="text-center" style="width: 7rem; white-space: nowrap;">아이디</th>
+                                <th class="text-center" style="width: 7rem; white-space: nowrap;">이름</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody v-if="message">
+                            <tr>
+                                <td colspan=4 class="text-center pa-5">
+                                    {{ message }}
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody v-if="!searching">
+                            <tr v-for="(p, i) in people" :key="i" @click="$router.push(`/person/${p.id}`)">
+                                <td></td>
+                                <td style="white-space: nowrap;" class="text-center">{{ p.id }}</td>
+                                <td style="white-space: nowrap;" class="text-center">{{ p.name }}</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                        <tbody v-else>
+                            <tr>
+                                <td colspan=4 class="text-center pt-10 pb-10">
+                                    <v-progress-circular
+                                        :size="70"
+                                        :width="7"
+                                        color="grey"
+                                        indeterminate
+                                    ></v-progress-circular>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </template>
+                </v-simple-table>
+            </v-card>
         </v-col>
     </v-row>
 </v-container>
