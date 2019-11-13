@@ -1,5 +1,12 @@
 <template>
-<div style="position: relative; width: 15rem; height: 4rem; border: 1px solid #D5D5D5;">
+<div
+    style="
+        position: relative;
+        width: 15rem;
+        height: 4rem;
+        border: 2px solid;"
+    :style="`border-color: ${ (focused) ? '#039BE5' : '#D5D5D5'};`"
+>
     <v-text-field
         outlined
         ref="submit"

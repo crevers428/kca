@@ -49,7 +49,7 @@ const mod = {
                 }
                 else {
                     if(record.best > 0) {
-                        condition.best = { $lte: record.best, $gt: 0 }
+                        condition.best = { $lt: record.best, $gt: 0 }
                     }
                     else {
                         condition.best = { $gt: 0 }

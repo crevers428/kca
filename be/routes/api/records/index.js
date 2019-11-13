@@ -38,6 +38,59 @@ router.get('/history/:ev/:type', function(req, res) {
         })
 })
 
+router.get('/search/:keyword', async function(req, res, next) {
+    const keyword = req.params.keyword
+    const split = keyword.split(" ")
+    const ofc = Record.schema.obj.event.enum
+    let results = []
+
+    for (let k of split) {
+        if(k.length < 2) return res.send({ short: true })
+    }
+
+    try {
+        const cond = {}
+        if(split.length === 1) {
+            cond.personName = { $regex: '.*' + split[0] + '.*'}
+        }
+        else if(split.length === 2) {
+            if(ofc.indexOf(split[1]) >= 0) {
+                cond.event = split[1]
+                cond.$or = [
+                    { compName: { $regex: '.*' + split[0] + '.*'} },
+                    { compId: { $regex: '.*' + split[0] + '.*'} },
+                    { personName: { $regex: '.*' + split[0] + '.*'} }
+                ]
+            }
+            else {
+                cond.$or = [
+                    { compName: { $regex: '.*' + split[0] + '.*'} },
+                    { compId: { $regex: '.*' + split[0] + '.*'} },
+                ]
+                cond.personName = { $regex: '.*' + split[1] + '.*'}
+            }
+        }
+        else if(split.length === 3) {
+            cond.$or = [
+                { compName: { $regex: '.*' + split[0] + '.*'} },
+                { compId: { $regex: '.*' + split[0] + '.*'} },
+            ]
+            cond.event = split[1]
+            cond.personName = { $regex: '.*' + split[2] + '.*'}
+        }
+        else {
+            return res.send(results)
+        }
+        results = await Record.find(cond).sort({ date: -1, event: 1, round: -1 })
+
+        return res.send({ results: results })
+
+    }
+    catch (e) {
+        return next(createError(400, e.message))
+    }
+})
+
 router.get('/mod/:_id', function(req, res, next) {
     Record.findOne({ _id: req.params._id })
         .then(r => {

@@ -5,7 +5,7 @@
         right
         temporary
     >
-        <v-list v-for="(nav, i) in navs" :key="i">
+        <v-list v-for="(nav, i) in filteredNavs" :key="i">
             <v-list-item
                 :to="nav.to"
             >
@@ -23,6 +23,36 @@ export default {
     data: () => ({
         drawer: false
     }),
+    computed: {
+        filteredNavs () {
+            const filtered = []
+            this.navs.forEach(main => {
+                if(!main.admin || this.$store.state.token) {
+                    if(main.admin) {
+                        filtered.push(main)
+                    }
+                    else {
+                        const nav = { title: main.title, to: main.to, subs: []}
+                        if(main.subs != undefined) {
+                            main.subs.forEach(sub => {
+                                if(!sub.admin || this.$store.state.token) {
+                                    nav.subs.push(sub)
+                                }
+                            })
+                        }
+                        filtered.push(nav)
+                    }
+                }
+                else {
+                    if(!main.admin) {
+                        filtered.push(main)
+                    }
+                }
+            })
+
+            return filtered
+        }
+    },
     created () {
         this.$EventBus.$on('navDrawer', () => this.drawer = !this.drawer)
     }

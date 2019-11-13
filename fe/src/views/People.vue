@@ -4,7 +4,7 @@
     style="width: 100%;"
 >
     <v-row align="center" justify="center" :class="(ready) ? '' : 'mt-n12'">
-        <v-col cols=12 align="center" :class="(ready) ? '' : 'mt-n12'">
+        <v-col cols=12 sm=12 md=6 align="center" :class="(ready) ? '' : 'mt-n12'">
             <div
                 class="pa-5"
                 :class="(ready) ? '' : 'mb-10'"
@@ -13,8 +13,8 @@
                 개인 기록
             </div>
             <v-text-field
-                outlined
-                label="이름"
+                regular
+                label="이름, ID"
                 clearable
                 v-model="keyword"
                 append-outer-icon="search"
@@ -22,13 +22,12 @@
                 @input="inputChanged"
                 v-on:keyup.enter="search"
                 autofocus
-                style="width: 30rem;"
             >
             </v-text-field>
         </v-col>
     </v-row>
     <v-divider v-show="ready" ></v-divider>
-    <v-row v-show="ready" style="transition: 1s all ease;">
+    <v-row v-show="ready">
         <v-col>
             <v-card outlined>
                 <v-simple-table>

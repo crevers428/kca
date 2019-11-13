@@ -87,6 +87,25 @@ export default {
                         to: "/person"
                     }
                 ]
+            },
+            {
+                title: "데이터 관리",
+                to: "",
+                admin: true,
+                subs: [
+                    {
+                        title: '기록 편집',
+                        to: "/record/mod"
+                    },
+                    {
+                        title: '대회 편집',
+                        to: "/comp/mod"
+                    },
+                    {
+                        title: '선수 편집',
+                        to: "/person/mod"
+                    }
+                ]
             }
         ]
     }),

@@ -74,7 +74,6 @@ export default {
     methods: {
         keydown (e) {
             if(e.keyCode == 13) {
-                const i = this.getFocused()
                 this.nextField()
             }
             else if(e.keyCode == 40) {

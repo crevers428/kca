@@ -18,7 +18,7 @@
             left:0;
             transition: 1s all ease;
         "
-        :style="`height: ${(hover && !$vuetify.breakpoint.smAndDown) ? '200px' : '0'};`"
+        :style="`height: ${(hover && !$vuetify.breakpoint.smAndDown) ? '220px' : '0'};`"
     >
     </v-card>
     <v-toolbar-title class="text-uppercase" @click="$router.push('/')">
@@ -28,7 +28,7 @@
     <v-spacer></v-spacer>
     <v-toolbar-items v-show="!$vuetify.breakpoint.smAndDown">
         <v-list
-            v-for="(nav, i) in navs"
+            v-for="(nav, i) in filteredNavs"
             :key="i"
             color="transparent"
             width="150px"
@@ -93,9 +93,35 @@ export default {
             this.$EventBus.$emit('navDrawer')
         }
     },
-    components: {},
-    mounted () {
-        console.log(this.$vuetify)
-    }
+    computed: {
+        filteredNavs () {
+            const filtered = []
+            this.navs.forEach(main => {
+                if(!main.admin || this.$store.state.token) {
+                    if(main.admin) {
+                        filtered.push(main)
+                    }
+                    else {
+                        const nav = { title: main.title, to: main.to, subs: []}
+                        if(main.subs != undefined) {
+                            main.subs.forEach(sub => {
+                                if(!sub.admin || this.$store.state.token) {
+                                    nav.subs.push(sub)
+                                }
+                            })
+                        }
+                        filtered.push(nav)
+                    }
+                }
+                else {
+                    if(!main.admin) {
+                        filtered.push(main)
+                    }
+                }
+            })
+
+            return filtered
+        }
+    },
 }
 </script>

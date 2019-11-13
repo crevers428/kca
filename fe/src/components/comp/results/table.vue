@@ -8,7 +8,7 @@
                     <th class="text-center" style="white-space: nowrap; width: 3rem;">이름</th>
                     <th style="width: 1rem;"></th>
                     <th class="text-right" style="white-space: nowrap; width: 5rem;">최고 기록</th>
-                    <th class="text-right" style="white-space: nowrap; width: 5rem;">평균 기록</th>
+                    <th v-if="type == 'm' || type== 'a'" class="text-right" style="white-space: nowrap; width: 5rem;">평균 기록</th>
                     <th style="width: 1rem;"></th>
                     <th class="text-right" style="width: 5rem;">1회</th>
                     <th class="text-right" style="width: 5rem;">2회</th>
@@ -40,7 +40,7 @@
                         </span>
                         {{timeReg(record.best)}}
                     </td>
-                    <td class="text-right" style="font-size: 0.8rem; position: relative;">
+                    <td v-if="type == 'm' || type == 'a'" class="text-right" style="font-size: 0.8rem; position: relative;">
                         <span
                             v-if="record.nrMean"
                             style="position: absolute; top: 1px; right: 1px; font-size: 0.6rem; color: #E64A19;"

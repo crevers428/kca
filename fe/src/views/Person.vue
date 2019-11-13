@@ -9,7 +9,7 @@
             <v-tab style="text-transform: initial;">
                 랭킹
             </v-tab>
-            <v-tab v-for="h in arrangedHistory" style="text-transform: initial;">
+            <v-tab v-for="(h, g) in arrangedHistory" style="text-transform: initial;" :key="g">
                 {{ ofcText[h[0].event]}}
             </v-tab>
         </v-tabs>
@@ -17,7 +17,7 @@
     <v-divider></v-divider>
     <v-row>
         <v-col>
-            <v-tabs-items v-model="tab" touchless>
+            <v-tabs-items v-model="tab" touchless class="pt-1">
                 <v-tab-item>
                     <v-card outlined>
                         <v-simple-table v-if="ranking.single.length > 0">

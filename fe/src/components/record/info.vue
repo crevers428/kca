@@ -40,7 +40,7 @@
                     등록일 :
                 </v-col>
                 <v-col cols=8 md=4 class="pa-1">
-                    {{ date }}
+                    {{ $moment(date).format('ll') }}
                 </v-col>
                 <v-col cols=4 md=2 class="text-left pa-1">
                     형식 :

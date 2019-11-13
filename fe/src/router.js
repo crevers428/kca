@@ -109,12 +109,11 @@ export default new Router({
     },
 
     {
-        path: '/record',
-        name: 'records',
-        component: () => import('./views/Record.vue'),
+        path: '/record/mod',
+        name: 'recordSearch',
+        component: () => import('./views/Records.vue'),
         beforeEnter: pageCheck
     },
-    
     {
         path: '/record/mod/:_id',
         name: 'record',

@@ -4,7 +4,7 @@
         position: relative;
         width: 15rem;
         height: 4rem;
-        border: 1px solid;"
+        border: 2px solid;"
     :style="`border-color: ${ (focused) ? '#039BE5' : '#D5D5D5'};`"
 >
     <v-text-field
@@ -90,7 +90,6 @@ export default {
             }
         },
         keydown (e) {
-            console.log(e.keyCode)
             let input = this.input
             if((e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 96 && e.keyCode <= 105)) {
                 const length = input.length
