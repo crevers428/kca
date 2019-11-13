@@ -4,6 +4,7 @@
         v-model="drawer"
         right
         temporary
+        touchless
     >
         <v-list v-for="(nav, i) in filteredNavs" :key="i">
             <v-list-item
