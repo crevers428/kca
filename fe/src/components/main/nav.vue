@@ -5,8 +5,9 @@
         right
         temporary
         touchless
+        height="99%"
     >
-        <v-list v-for="(nav, i) in filteredNavs" :key="i">
+        <v-list v-for="(nav, i) in filteredNavs" :key="i" style="height: 100%; overflow: auto;">
             <v-list-item
                 :to="nav.to"
             >
