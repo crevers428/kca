@@ -55,6 +55,7 @@ export default {
                 .then(r => {
                     if(!r.data.r) throw new Error("No record from db.")
                     this.record = r.data.r
+                    console.log(this.record)
                     this.detailOld = JSON.parse(JSON.stringify(this.record.detail))
                     this.ready = true
                 })
@@ -72,9 +73,6 @@ export default {
                     this.$_error(e)
                 })
         }
-    },
-    mounted () {
-        this.setRecord()
     }
 }
 </script>

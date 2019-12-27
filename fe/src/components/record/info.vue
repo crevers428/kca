@@ -28,7 +28,7 @@
                     종목 :
                 </v-col>
                 <v-col cols=8 md=4 class="pa-1">
-                    {{ ofc[ev] }}
+                    {{ ofc[event] }}
                 </v-col>
                 <v-col cols=4 md=2 class="text-left pa-1">
                     라운드 :
@@ -103,7 +103,7 @@ export default {
         personName: { type: String },
         personId: { tpye: String },
         compName: { type: String },
-        ev: { type: String },
+        event: { type: String },
         round: { type: Number},
         date: { type: String },
         type: { type: String },
@@ -119,9 +119,6 @@ export default {
         return {
             ofc: ofcEvents.events
         }
-    },
-    watch: {
-
     }
 }
 </script>
